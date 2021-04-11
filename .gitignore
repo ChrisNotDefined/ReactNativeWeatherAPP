@@ -60,3 +60,6 @@ buck-out/
 
 #VSCode
 .vscode/
+
+#Avoiding publication of keys
+keys/

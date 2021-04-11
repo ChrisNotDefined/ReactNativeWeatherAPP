@@ -7,21 +7,16 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {StatusBar, Text} from 'react-native';
+import Home from './src/screens/Home';
+import Search from './src/screens/Search';
 
 const App = () => {
   return (
     <>
-      <StatusBar barStyle='dark-content' backgroundColor='#00aaff' />
-      <Text>Hello world</Text>
+      <StatusBar barStyle="dark-content" backgroundColor="#00aaff" />
+      {/* <Search/> */}
+      <Home/>
     </>
   );
 };

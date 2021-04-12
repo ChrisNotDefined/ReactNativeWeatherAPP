@@ -3,8 +3,9 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {Button, TextInput, Card} from 'react-native-paper';
 import Header from '../components/Header';
+import Colors from '../utils/Colors';
 
-const Search = () => {
+const Search = ({navigation}) => {
   const [city, setCity] = useState('');
   const [cities, setCities] = useState([]);
 
@@ -26,6 +27,19 @@ const Search = () => {
         });
   };
 
+  const btnClick = () => {
+    navigation.navigate('home', {
+      city,
+    });
+  };
+
+  const listClick = city_name => {
+    setCity(city_name);
+    navigation.navigate('home', {
+      city: city_name,
+    });
+  };
+
   return (
     <View style={styles.pageContanier}>
       <Header name="Search Screen" />
@@ -34,7 +48,7 @@ const Search = () => {
         label="City Name"
         theme={{
           colors: {
-            primary: '#00aaff',
+            primary: Colors.PRIMARY,
           },
         }}
         value={city}
@@ -46,11 +60,12 @@ const Search = () => {
         style={styles.button}
         theme={{
           colors: {
-            primary: '#00aaff',
+            primary: Colors.PRIMARY,
           },
         }}
         onPress={() => {
           console.log('Pressed');
+          btnClick();
         }}>
         <Text style={styles.buttonText}>Press Me</Text>
       </Button>
@@ -58,7 +73,11 @@ const Search = () => {
         data={cities}
         renderItem={({item}) => {
           return (
-            <Card style={styles.card}>
+            <Card
+              style={styles.card}
+              onPress={() => {
+                listClick(item);
+              }}>
               <Text>{item}</Text>
             </Card>
           );

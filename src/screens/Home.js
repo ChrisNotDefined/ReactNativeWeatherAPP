@@ -3,9 +3,14 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import {Card, Title} from 'react-native-paper';
 import {API_KEY} from '../../keys';
 import Header from '../components/Header';
+import Colors from '../utils/Colors';
+import { capitalize } from '../utils/StringCapitalizer';
 
-const Home = () => {
-  const api_url = `https://api.openweathermap.org/data/2.5/weather?q=london&appid=${API_KEY}&units=metric`;
+const Home = props => {
+  const [city, setCity] = useState(props.route.params.city);
+
+  const api_url = city =>
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
 
   const weatherIconUrl = icon => `https://openweathermap.org/img/w/${icon}.png`;
 
@@ -22,7 +27,8 @@ const Home = () => {
   }, []); // [] => Call as componentDidMuont
 
   const getWeather = () => {
-    fetch(api_url)
+    const {city: myCity} = props.route.params;
+    fetch(api_url(myCity))
       .then(res => res.json())
       .then(data => {
         setInfo({
@@ -38,6 +44,11 @@ const Home = () => {
         console.log(err);
       });
   };
+
+  if(props.route.params.city !== city) {
+    setCity(props.route.params.city);
+    getWeather();
+  }
 
   return (
     <View style={styles.pageContainer}>
@@ -58,7 +69,7 @@ const Home = () => {
         </Card>
         <Card style={styles.card}>
           <Title style={styles.cardTitle}>
-            Description - {info.description}
+            Description - {capitalize(info.description)}
           </Title>
         </Card>
       </View>
@@ -71,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    color: '#00aaff',
+    color: Colors.PRIMARY,
     marginTop: 30,
     fontSize: 30,
   },
@@ -84,7 +95,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   cardTitle: {
-    color: '#00aaff',
+    color: Colors.PRIMARY,
   },
   center: {
     alignItems: 'center',

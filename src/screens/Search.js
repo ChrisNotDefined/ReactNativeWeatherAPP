@@ -1,7 +1,9 @@
-import {template} from '@babel/core';
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {Button, TextInput, Card} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 import Header from '../components/Header';
 import Colors from '../utils/Colors';
 
@@ -27,14 +29,16 @@ const Search = ({navigation}) => {
         });
   };
 
-  const btnClick = () => {
+  const btnClick = async () => {
+    await AsyncStorage.setItem("city", city)
     navigation.navigate('home', {
       city,
     });
   };
 
-  const listClick = city_name => {
+  const listClick = async city_name => {
     setCity(city_name);
+    await AsyncStorage.setItem("city", city_name)
     navigation.navigate('home', {
       city: city_name,
     });

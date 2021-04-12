@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {Card, Title} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {API_KEY} from '../../keys';
 import Header from '../components/Header';
 import Colors from '../utils/Colors';
-import { capitalize } from '../utils/StringCapitalizer';
+import {capitalize, graduate} from '../utils/Strings';
 
 const Home = props => {
   const [city, setCity] = useState(props.route.params.city);
@@ -26,8 +28,13 @@ const Home = props => {
     getWeather();
   }, []); // [] => Call as componentDidMuont
 
-  const getWeather = () => {
-    const {city: myCity} = props.route.params;
+  const getWeather = async () => {
+    
+    let myCity = await AsyncStorage.getItem('city');
+    if(!myCity) {
+      myCity = props.route.params.city;
+    }
+
     fetch(api_url(myCity))
       .then(res => res.json())
       .then(data => {
@@ -45,7 +52,7 @@ const Home = props => {
       });
   };
 
-  if(props.route.params.city !== city) {
+  if (props.route.params.city !== city) {
     setCity(props.route.params.city);
     getWeather();
   }
@@ -62,10 +69,14 @@ const Home = props => {
           />
         </View>
         <Card style={styles.card}>
-          <Title style={styles.cardTitle}>Temperature - {info.temp}</Title>
+          <Title style={styles.cardTitle}>
+            Temperature - {graduate(info.temp, '°C')}
+          </Title>
         </Card>
         <Card style={styles.card}>
-          <Title style={styles.cardTitle}>Humidity - {info.humidity}</Title>
+          <Title style={styles.cardTitle}>
+            Humidity - {graduate(info.humidity, '%')}
+          </Title>
         </Card>
         <Card style={styles.card}>
           <Title style={styles.cardTitle}>
